@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
-    android:background="@drawable/recycler_view_item_border"
+    android:background="@color/white"
     android:orientation="horizontal">
 
     <TextView
@@ -12,39 +12,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:text="Spaghetii"
+        android:layout_margin="10dp"
         android:textStyle="bold"
         android:textSize="30dp">
 
     </TextView>
 
     <TextView
-        android:id="@+id/numberOfIngredientsTextView"
+        android:id="@+id/number_of_ingredients_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_centerHorizontal="true"
-        android:text="15/20"
         android:textSize="30dp">
 
     </TextView>
 
-    <ImageView
-        android:id="@+id/imPopUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/options_text_view"
+        android:layout_width="20dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:gravity="center"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/icon_menu_dot">
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge">
 
-    </ImageView>
+    </TextView>
 
     <TextView
         android:id="@+id/created_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/list_name_text_view"
-        android:text="Created: "
-        android:textSize="20dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/created"
+        android:textSize="20sp">
 
     </TextView>
 
@@ -52,9 +58,11 @@
         android:id="@+id/time_of_creation_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/numberOfIngredientsTextView"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/number_of_ingredients_text_view"
         android:layout_toEndOf="@id/created_text_view"
-        android:text="2012-15-15"
         android:textStyle="italic"
         android:textSize="20dp">
 
