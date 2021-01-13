@@ -23,8 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="30dp">
+        android:layout_toLeftOf="@id/options_text_view"
+
+        android:layout_alignParentEnd="true"
+        android:textSize="20dp">
 
     </TextView>
 
@@ -61,7 +63,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@+id/number_of_ingredients_text_view"
+        android:layout_below="@id/list_name_text_view"
         android:layout_toEndOf="@id/created_text_view"
         android:textStyle="italic"
         android:textSize="20dp">

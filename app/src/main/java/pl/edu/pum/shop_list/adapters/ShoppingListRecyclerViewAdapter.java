@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,7 +85,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
     private void showEditDialog(ShoppingList currentShoppingList)
     {
-        final View view = mContext.getLayoutInflater().inflate(R.layout.edit_dialog, null);
+        final View view = mContext.getLayoutInflater().inflate(R.layout.list_dialog, null);
         EditText mEditNameEditText = view.findViewById(R.id.list_name_edit_text);
         mEditNameEditText.setText(currentShoppingList.getListName());
         AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
