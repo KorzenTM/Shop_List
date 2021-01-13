@@ -29,7 +29,7 @@ public class ShopListsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View v =  inflater.inflate(R.layout.fragment_shop_lists, container, false);
+        View v =  inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         return v;
     }
 }

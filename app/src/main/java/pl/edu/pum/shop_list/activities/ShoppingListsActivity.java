@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 
 import pl.edu.pum.shop_list.fragments.ShopListsFragment;
 
-public class ShopListsActivity extends SingleFragmentActivity
+public class ShoppingListsActivity extends SingleFragmentActivity
 {
     @Override
     protected Fragment createFragment()

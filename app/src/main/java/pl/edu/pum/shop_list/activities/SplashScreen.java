@@ -47,7 +47,7 @@ public class SplashScreen extends AppCompatActivity
             }
 
             progressBar.setVisibility(View.INVISIBLE);
-            Intent intent = new Intent(SplashScreen.this, ShopListsActivity.class);
+            Intent intent = new Intent(SplashScreen.this, ShoppingListsActivity.class);
             startActivity(intent);
             finish();
         }
