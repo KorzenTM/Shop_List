@@ -14,7 +14,7 @@
         android:layout_height="150dp"
         android:layout_marginTop="120dp"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/splash_screen_list_icon"
+        android:src="@drawable/list_icon"
         />
 
     <TextView

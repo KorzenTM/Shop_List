@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
+import pl.edu.pum.shop_list.activities.SplashScreen;
 import pl.edu.pum.shop_list.adapters.ShoppingListRecyclerViewAdapter;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
@@ -26,7 +27,8 @@ public class ShopListsFragment extends Fragment
     private ShoppingListRecyclerViewAdapter mShoppingListRecyclerViewAdapter;
     private FloatingActionButton mAddListFAB;
 
-    public static List<ShoppingList> mShoppingLists = new ArrayList<>();
+
+    private List<ShoppingList> mShoppingLists;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,20 +43,26 @@ public class ShopListsFragment extends Fragment
 
         mAddListFAB = v.findViewById(R.id.fab);
         mShoppingListsRecyclerView = v.findViewById(R.id.recycler_view);
-
-        for(int i = 0; i <= 10; i++)
-        {
-            ShoppingList shoppingList = new ShoppingList();
-            shoppingList.setId(i);
-            shoppingList.setListName("List " + i);
-            mShoppingLists.add(shoppingList);
-        }
+        mShoppingLists = SplashScreen.mShoppingLists;
 
         mShoppingListsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mShoppingListRecyclerViewAdapter = new ShoppingListRecyclerViewAdapter(getActivity(), mShoppingLists);
         mShoppingListsRecyclerView.setAdapter(mShoppingListRecyclerViewAdapter);
 
-
         return v;
+    }
+
+    @Override
+    public void onResume()
+    {
+        mShoppingListRecyclerViewAdapter.notifyDataSetChanged();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        SplashScreen.dbHandler.close();
+        super.onDestroyView();
     }
 }

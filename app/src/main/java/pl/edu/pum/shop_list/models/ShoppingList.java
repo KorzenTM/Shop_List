@@ -7,11 +7,21 @@ public class ShoppingList
 {
     private int id;
     private String mListName;
-    private Date date;
+    private Date mDate;
 
     public ShoppingList()
     {
-        date = new Date();
+
+    }
+
+    public void setDate(Date date)
+    {
+        this.mDate = date;
+    }
+
+    public Date getDate()
+    {
+        return mDate;
     }
 
     public int getId()
@@ -32,10 +42,5 @@ public class ShoppingList
     public void setListName(String mListName)
     {
         this.mListName = mListName;
-    }
-
-    public Date getDate()
-    {
-        return date;
     }
 }

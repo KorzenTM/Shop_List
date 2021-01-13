@@ -1,11 +1,15 @@
 package pl.edu.pum.shop_list.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
+import pl.edu.pum.shop_list.activities.SplashScreen;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
 public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder>
@@ -62,10 +67,12 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
                         switch (menuItem.getItemId())
                         {
                             case R.id.menu1:
-                                Toast.makeText(mContext, "Option1", Toast.LENGTH_SHORT).show();
+                                showEditDialog(currentShoppingList);
                                 break;
                             case R.id.menu2:
-                                Toast.makeText(mContext, "Option2", Toast.LENGTH_SHORT).show();
+                                SplashScreen.dbHandler.deleteShoppingList(currentShoppingList.getListName());
+                                SplashScreen.getShoppingLists();
+                                notifyDataSetChanged();
                                 break;
                         }
                         return false;
@@ -74,6 +81,50 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
                 popupMenu.show();
             }
         });
+
+    }
+
+    private void showEditDialog(ShoppingList currentShoppingList)
+    {
+        final View view = mContext.getLayoutInflater().inflate(R.layout.edit_dialog, null);
+        EditText mEditNameEditText = view.findViewById(R.id.list_name_edit_text);
+        mEditNameEditText.setText(currentShoppingList.getListName());
+        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+        alertDialog.setTitle("Edit name");
+        alertDialog.setMessage("You can rename your shopping list here.");
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                if (mEditNameEditText.getText().toString().isEmpty())
+                {
+                    Toast.makeText(mContext, "The field must not be empty", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    String name = mEditNameEditText.getText().toString();
+                    SplashScreen.dbHandler.updateShoppingList(currentShoppingList.getId(),
+                            name, currentShoppingList.getDate().toString());
+                    SplashScreen.getShoppingLists();
+                    notifyDataSetChanged();
+                    Toast.makeText(mContext, "Name has been updated", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.setView(view);
+        alertDialog.show();
 
     }
 
