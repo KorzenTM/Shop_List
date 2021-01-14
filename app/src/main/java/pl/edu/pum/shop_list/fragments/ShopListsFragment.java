@@ -102,6 +102,11 @@ public class ShopListsFragment extends Fragment
                     shoppingList.setId(mShoppingLists.size());
                     shoppingList.setDate(new Date());
                     shoppingList.setListName(name);
+                    List<String> test = new ArrayList<>();
+                    test.add("Jajko");
+                    test.add("Ziemniaki");
+                    test.add("Ser");
+                    shoppingList.setProductList(test);
                     SplashScreen.dbHandler.addShoppingList(shoppingList);
                     SplashScreen.getShoppingLists();
                     mShoppingListRecyclerViewAdapter.notifyItemInserted(mShoppingLists.size() - 1);

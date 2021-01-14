@@ -61,17 +61,8 @@ public class DBHandler extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(COLUMN_LIST_NAME, shoppingList.getListName());
         values.put(COLUMN_DATE, shoppingList.getDate().toString());
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.insert(TABLE_SHOPPING_LIST, null, values);
-        db.close();
-    }
-
-    public void addProducts(ShoppingList shoppingList)
-    {
-        ContentValues values = new ContentValues();
         values.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_SHOPPING_LIST, null, values);
@@ -113,14 +104,14 @@ public class DBHandler extends SQLiteOpenHelper
         db.close();
     }
 
-    public void updateProducts(int id, String products)
+    public void updateProducts(ShoppingList shoppingList)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, id);
-        contentValues.put(COLUMN_PRODUCTS, products);
+        contentValues.put(COLUMN_ID, shoppingList.getId());
+        contentValues.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
 
-        db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + id, null);
+        db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + shoppingList.getId(), null);
         db.close();
     }
 }

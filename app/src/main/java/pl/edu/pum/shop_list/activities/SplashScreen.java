@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -88,9 +89,13 @@ public class SplashScreen extends AppCompatActivity
                 int id = mCursor.getInt(0);
                 String list_name = mCursor.getString(1);
                 String date = mCursor.getString(2);
+                String s = mCursor.getString(3);
+                String formattedString = s.substring(1, s.length() - 1).replace(" ", "");
+                List<String> productsList = new ArrayList<String>(Arrays.asList(formattedString.split(",")));
                 shoppingList.setId(id);
                 shoppingList.setListName(list_name);
                 shoppingList.setDate(new Date(date));
+                shoppingList.setProductList(productsList);
                 mShoppingLists.add(shoppingList);
             }
         }

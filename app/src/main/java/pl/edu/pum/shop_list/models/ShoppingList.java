@@ -43,6 +43,11 @@ public class ShoppingList
         this.mListName = mListName;
     }
 
+    public void setProductList(List<String> products)
+    {
+        this.mProducts = products;
+    }
+
     public void addProduct(String ingredient)
     {
         mProducts.add(ingredient);

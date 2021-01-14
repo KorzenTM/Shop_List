@@ -22,17 +22,18 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:layout_margin="10sp"
             android:textSize="40sp"
             android:fontFamily="cursive">
         </TextView>
 
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ingredients_recycler_view"
+        android:id="@+id/products_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

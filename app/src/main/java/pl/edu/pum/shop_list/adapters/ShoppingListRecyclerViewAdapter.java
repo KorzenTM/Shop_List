@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
-import pl.edu.pum.shop_list.activities.IngredientsListViewPagerActivity;
+import pl.edu.pum.shop_list.activities.ProductsListViewPagerActivity;
 import pl.edu.pum.shop_list.activities.SplashScreen;
 import pl.edu.pum.shop_list.fragments.ProductsListFragment;
 import pl.edu.pum.shop_list.models.ShoppingList;
@@ -127,7 +127,6 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
         alertDialog.setView(view);
         alertDialog.show();
-
     }
 
     @Override
@@ -166,7 +165,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         @Override
         public void onClick(View view)
         {
-           Intent intent = new Intent(mContext, IngredientsListViewPagerActivity.class);
+           Intent intent = new Intent(mContext, ProductsListViewPagerActivity.class);
             ProductsListFragment.CurrentPosition = getAbsoluteAdapterPosition();
             mContext.startActivity(intent);
         }

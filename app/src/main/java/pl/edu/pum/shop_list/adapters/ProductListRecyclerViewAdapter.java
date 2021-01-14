@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,156 +18,75 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
-import pl.edu.pum.shop_list.activities.IngredientsListViewPagerActivity;
-import pl.edu.pum.shop_list.activities.SplashScreen;
-import pl.edu.pum.shop_list.fragments.ProductsListFragment;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
-public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder>
+public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<ProductListRecyclerViewAdapter.ViewHolder>
 {
     private final FragmentActivity mContext;
     private final List<ShoppingList> mShoppingList;
+    private List<String> mProductsList = new ArrayList<>();
 
-    public ProductListRecyclerViewAdapter(FragmentActivity context, List<ShoppingList> ShoppingLists)
+    public ProductListRecyclerViewAdapter(FragmentActivity context, List<ShoppingList> ShoppingLists, List<String> products)
     {
         this.mContext = context;
         this.mShoppingList = ShoppingLists;
+        this.mProductsList = products;
     }
 
     @NonNull
     @Override
-    public ProductListRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        return new ProductListRecyclerViewAdapter.ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.shopping_list_item,
+        return new ProductListRecyclerViewAdapter.ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.product_list_item,
                 parent,
                 false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShoppingListRecyclerViewAdapter.ViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull ProductListRecyclerViewAdapter.ViewHolder holder, int position)
     {
-        final ShoppingList currentShoppingList = mShoppingList.get(position);
-        holder.bind(currentShoppingList);
-
-        holder.mOptionsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View view)
-            {
-                PopupMenu popupMenu = new PopupMenu(mContext, holder.mOptionsButton);
-                popupMenu.inflate(R.layout.options_menu);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-                {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem)
-                    {
-                        switch (menuItem.getItemId())
-                        {
-                            case R.id.menu1:
-                                showEditDialog(currentShoppingList);
-                                break;
-                            case R.id.menu2:
-                                SplashScreen.dbHandler.deleteShoppingList(currentShoppingList.getListName());
-                                SplashScreen.getShoppingLists();
-                                notifyDataSetChanged();
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-
-    }
-
-    private void showEditDialog(ShoppingList currentShoppingList)
-    {
-        final View view = mContext.getLayoutInflater().inflate(R.layout.list_dialog, null);
-        EditText mEditNameEditText = view.findViewById(R.id.list_name_edit_text);
-        mEditNameEditText.setText(currentShoppingList.getListName());
-        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
-        alertDialog.setTitle("Edit name");
-        alertDialog.setMessage("You can rename your shopping list here.");
-
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                if (mEditNameEditText.getText().toString().isEmpty())
-                {
-                    Toast.makeText(mContext, "The field must not be empty", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    String name = mEditNameEditText.getText().toString();
-                    SplashScreen.dbHandler.updateShoppingList(currentShoppingList.getId(),
-                            name, currentShoppingList.getDate().toString());
-                    SplashScreen.getShoppingLists();
-                    notifyDataSetChanged();
-                    Toast.makeText(mContext, "Name has been updated", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.setView(view);
-        alertDialog.show();
-
+        final String currentProductList = mProductsList.get(position);
+        holder.bind(currentProductList);
     }
 
     @Override
     public int getItemCount()
     {
-        return mShoppingList.size();
+        return mProductsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        public final TextView mListNameTextView;
-        public final TextView mNumberOfIngredientsTextView;
-        public final TextView mCreatedDateTextView;
-        public final TextView mOptionsButton;
+        public final TextView mProductNameTextView;
+        public final TextView mNumberOfProductTextView;
+        public final CheckBox mIsBoughtCheckbox;
 
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
 
-            mListNameTextView = itemView.findViewById(R.id.list_name_text_view);
-            mNumberOfIngredientsTextView = itemView.findViewById(R.id.number_of_ingredients_text_view);
-            mCreatedDateTextView = itemView.findViewById(R.id.time_of_creation_text_view);
-            mOptionsButton = itemView.findViewById(R.id.options_text_view);
+            mProductNameTextView = itemView.findViewById(R.id.product_name_text_view);
+            mNumberOfProductTextView = itemView.findViewById(R.id.number_of_product_text_view);
+            mIsBoughtCheckbox = itemView.findViewById(R.id.bought_checkbox);
 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(ShoppingList currentShoppingList)
+        @SuppressLint("SetTextI18n")
+        public void bind(String productName)
         {
-            mListNameTextView.setText(currentShoppingList.getListName());
-            mCreatedDateTextView.setText(currentShoppingList.getDate().toString());
-            //TODO add number of ingredients after implementation
-            mNumberOfIngredientsTextView.setText("15/20");
+            mProductNameTextView.setText(productName);
+            mNumberOfProductTextView.setText(Integer.toString(mProductsList.size()));
         }
 
         @Override
         public void onClick(View view)
         {
-            Intent intent = new Intent(mContext, IngredientsListViewPagerActivity.class);
-            ProductsListFragment.CurrentPosition = getAbsoluteAdapterPosition();
-            mContext.startActivity(intent);
+
         }
     }
 }
