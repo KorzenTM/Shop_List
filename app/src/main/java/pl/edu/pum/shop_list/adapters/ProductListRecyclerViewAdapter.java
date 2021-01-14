@@ -17,8 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
@@ -27,12 +25,12 @@ import pl.edu.pum.shop_list.activities.SplashScreen;
 import pl.edu.pum.shop_list.fragments.ProductsListFragment;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
-public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder>
+public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder>
 {
     private final FragmentActivity mContext;
     private final List<ShoppingList> mShoppingList;
 
-    public ShoppingListRecyclerViewAdapter(FragmentActivity context, List<ShoppingList> ShoppingLists)
+    public ProductListRecyclerViewAdapter(FragmentActivity context, List<ShoppingList> ShoppingLists)
     {
         this.mContext = context;
         this.mShoppingList = ShoppingLists;
@@ -40,15 +38,15 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public ProductListRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.shopping_list_item,
+        return new ProductListRecyclerViewAdapter.ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.shopping_list_item,
                 parent,
                 false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull ShoppingListRecyclerViewAdapter.ViewHolder holder, int position)
     {
         final ShoppingList currentShoppingList = mShoppingList.get(position);
         holder.bind(currentShoppingList);
@@ -166,7 +164,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         @Override
         public void onClick(View view)
         {
-           Intent intent = new Intent(mContext, IngredientsListViewPagerActivity.class);
+            Intent intent = new Intent(mContext, IngredientsListViewPagerActivity.class);
             ProductsListFragment.CurrentPosition = getAbsoluteAdapterPosition();
             mContext.startActivity(intent);
         }

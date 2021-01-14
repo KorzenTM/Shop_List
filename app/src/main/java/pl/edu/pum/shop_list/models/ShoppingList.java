@@ -2,17 +2,16 @@ package pl.edu.pum.shop_list.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ShoppingList
 {
     private int id;
     private String mListName;
     private Date mDate;
+    private List<String> mProducts = new ArrayList<>();
 
-    public ShoppingList()
-    {
-
-    }
+    public ShoppingList() { }
 
     public void setDate(Date date)
     {
@@ -42,5 +41,15 @@ public class ShoppingList
     public void setListName(String mListName)
     {
         this.mListName = mListName;
+    }
+
+    public void addProduct(String ingredient)
+    {
+        mProducts.add(ingredient);
+    }
+
+    public List<String> getProductsList()
+    {
+        return mProducts;
     }
 }

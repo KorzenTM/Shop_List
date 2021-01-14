@@ -17,6 +17,7 @@ public class DBHandler extends SQLiteOpenHelper
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_LIST_NAME = "listName";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_PRODUCTS = "products";
 
     public DBHandler(Context context)
     {
@@ -34,6 +35,8 @@ public class DBHandler extends SQLiteOpenHelper
                 COLUMN_LIST_NAME +
                 " TEXT," +
                 COLUMN_DATE +
+                " TEXT," +
+                COLUMN_PRODUCTS +
                 " TEXT" +
                 ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_LISTS_TABLE);
@@ -59,6 +62,16 @@ public class DBHandler extends SQLiteOpenHelper
         values.put(COLUMN_LIST_NAME, shoppingList.getListName());
         values.put(COLUMN_DATE, shoppingList.getDate().toString());
 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_SHOPPING_LIST, null, values);
+        db.close();
+    }
+
+    public void addProducts(ShoppingList shoppingList)
+    {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_SHOPPING_LIST, null, values);
@@ -95,6 +108,17 @@ public class DBHandler extends SQLiteOpenHelper
         contentValues.put(COLUMN_ID, id);
         contentValues.put(COLUMN_LIST_NAME, listName);
         contentValues.put(COLUMN_DATE, date);
+
+        db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + id, null);
+        db.close();
+    }
+
+    public void updateProducts(int id, String products)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_ID, id);
+        contentValues.put(COLUMN_PRODUCTS, products);
 
         db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + id, null);
         db.close();

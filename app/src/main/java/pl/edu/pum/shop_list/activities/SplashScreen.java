@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
+import pl.edu.pum.shop_list.fragments.ShopListsFragment;
 import pl.edu.pum.shop_list.handlers.DBHandler;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
@@ -48,8 +49,8 @@ public class SplashScreen extends AppCompatActivity
                     dbHandler = new DBHandler(getBaseContext());
                     mCursor = dbHandler.getShoppingLists();
 
-                    if (mCursor.getCount() == 0)
-                        test_data(10);
+                    //if (mCursor.getCount() == 0)
+                        //test_data(10);
 
                     getShoppingLists();
                     progressBar.setVisibility(View.VISIBLE);
@@ -75,6 +76,7 @@ public class SplashScreen extends AppCompatActivity
 
         if (mCursor.getCount() == 0)
         {
+            ShopListsFragment.mInformationAboutAddTextView.setVisibility(View.VISIBLE);
             Log.d("DATABASE_STATUS", "EMPTY DATABASE");
         }
         else

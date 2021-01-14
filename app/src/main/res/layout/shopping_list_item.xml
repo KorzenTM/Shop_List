@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_toLeftOf="@id/options_text_view"
-
         android:layout_alignParentEnd="true"
         android:textSize="20dp">
 
@@ -69,5 +68,4 @@
         android:textSize="20dp">
 
     </TextView>
-
 </RelativeLayout>
