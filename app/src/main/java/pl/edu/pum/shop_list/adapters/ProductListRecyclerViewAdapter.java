@@ -36,12 +36,14 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
     private final FragmentActivity mContext;
     private List<String> mProductsList;
     private List<String> mNumberOfProductList;
+    private List<String> mIfBoughtList;
 
-    public ProductListRecyclerViewAdapter(FragmentActivity context, List<String> products, List<String> number_of_products)
+    public ProductListRecyclerViewAdapter(FragmentActivity context, List<String> products, List<String> number_of_products, List<String> ifBought)
     {
         this.mContext = context;
         this.mProductsList = products;
         this.mNumberOfProductList = number_of_products;
+        this.mIfBoughtList = ifBought;
     }
 
     @NonNull
@@ -58,42 +60,43 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
     {
         final String currentProductName = mProductsList.get(position);
         final String currentNumberOfProduct = mNumberOfProductList.get(position);
-        int currentPagerPosition = ProductsListViewPagerFragment.viewPager2.getCurrentItem();
-        ShoppingList currentShoppingList = SplashScreen.mShoppingLists.get(currentPagerPosition);
-        Boolean ifBought = Boolean.parseBoolean(currentShoppingList.getIfBoughtProductList().get(position));
+        final String ifBought = mIfBoughtList.get(position);
 
-        holder.bind(currentProductName, currentNumberOfProduct, Boolean.parseBoolean(currentShoppingList.getIfBoughtProductList().get(position)));
 
-        holder.setBackgroundDependsOfCheckbox(ifBought);
+
+        holder.bind(currentProductName, currentNumberOfProduct, ifBought);
 
         holder.mIsBoughtCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b)
             {
+                int currentPagerPosition = ProductsListViewPagerFragment.viewPager2.getCurrentItem();
+                ShoppingList currentShoppingList = SplashScreen.mShoppingLists.get(currentPagerPosition);
+
                 int id = currentShoppingList.getId();
                 String NameList = currentShoppingList.getListName();
                 String Date = currentShoppingList.getDate().toString();
-                String productName = currentProductName;
-                String numberOfProduct = currentNumberOfProduct;
+
                 if (b)
                 {
-                    holder.setBackgroundDependsOfCheckbox(true);
+                    holder.setBackgroundDependsOfCheckbox("true");
                     currentShoppingList.incrementNumberOfProductsBought();
-                    currentShoppingList.getIfBoughtProductList().set(position, "true");
+                    mIfBoughtList.set(position, "true");
                 }
                 else
                 {
-                    holder.setBackgroundDependsOfCheckbox(false);
-                    currentShoppingList.getIfBoughtProductList().set(position, "false");
+                    holder.setBackgroundDependsOfCheckbox("false");
                     currentShoppingList.decrementNumberOfProductsBought();
+                    mIfBoughtList.set(position, "false");
                 }
 
-                int numberOfProductBought = SplashScreen.mShoppingLists.get(currentPagerPosition).getNumberOfProductsBought();
+                int numberOfProductBought = currentShoppingList.getNumberOfProductsBought();
                 SplashScreen.dbHandler.updateShoppingList(id, NameList, Date, mProductsList,
-                        mNumberOfProductList, numberOfProductBought, currentShoppingList.getIfBoughtProductList());
+                        mNumberOfProductList, numberOfProductBought, mIfBoughtList);
                 SplashScreen.getShoppingLists();
-                notifyDataSetChanged();
+
+                setNewAdapter(currentPagerPosition);
             }
         });
 
@@ -147,9 +150,7 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
                             mNumberOfProductList, numberOfProductBought, currentShoppingList.getIfBoughtProductList());
                     SplashScreen.getShoppingLists();
 
-                    ProductListRecyclerViewAdapter newAdapter = new ProductListRecyclerViewAdapter(mContext, mProductsList, mNumberOfProductList);
-                    ProductsListFragment.productListRecyclerViewAdapterList.set(ViewPagerSite, newAdapter);
-                    ProductsListFragment.productRecyclerViewList.get(ViewPagerSite).setAdapter(newAdapter);
+                    setNewAdapter(ViewPagerSite);
 
                     Toast.makeText(mContext, "The product has been updated", Toast.LENGTH_SHORT).show();
                 }
@@ -167,6 +168,13 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
 
         alertDialog.setView(view);
         alertDialog.show();
+    }
+
+    void setNewAdapter(int index)
+    {
+        ProductListRecyclerViewAdapter newAdapter = new ProductListRecyclerViewAdapter(mContext, mProductsList, mNumberOfProductList, mIfBoughtList);
+        ProductsListFragment.productListRecyclerViewAdapterList.set(index, newAdapter);
+        ProductsListFragment.productRecyclerViewList.get(index).setAdapter(newAdapter);
     }
 
     @Override
@@ -195,7 +203,7 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
         }
 
         @SuppressLint("SetTextI18n")
-        public void bind(String productName, String how_many, Boolean ifBought)
+        public void bind(String productName, String how_many, String ifBought)
         {
             mProductNameTextView.setText(productName);
             mNumberOfProductTextView.setText(how_many);
@@ -203,15 +211,15 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
             setBackgroundDependsOfCheckbox(ifBought);
         }
 
-        public void setBackgroundDependsOfCheckbox(Boolean b)
+        public void setBackgroundDependsOfCheckbox(String b)
         {
-            if (b)
+            if (b.equals("true"))
             {
                 mIsBoughtCheckbox.setChecked(true);
                 itemView.setBackgroundColor(Color.GRAY);
                 mEditButton.setEnabled(false);
             }
-            else
+            else if (b.equals("false"))
             {
                 mIsBoughtCheckbox.setChecked(false);
                 itemView.setBackgroundColor(Color.WHITE);

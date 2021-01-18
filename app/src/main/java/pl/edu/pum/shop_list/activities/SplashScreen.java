@@ -109,7 +109,7 @@ public class SplashScreen extends AppCompatActivity
 
                 String s3 = mCursor.getString((6));
                 List<String> ifBoughtProduct = new ArrayList<>();
-                if (!s2.equals("null"))
+                if (!s3.equals("null"))
                 {
                     String formattedString3 = s3.substring(1, s3.length() - 1).replace(" ", "");
                     ifBoughtProduct = new LinkedList<>(Arrays.asList(formattedString3.split(",")));

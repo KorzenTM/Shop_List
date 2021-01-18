@@ -87,7 +87,8 @@ public class ProductsListFragment extends Fragment
 
         mCurrentRecyclerViewAdapter = new ProductListRecyclerViewAdapter(getActivity(),
                 shoppingList.getProductsList(),
-                shoppingList.getNumberOfProductsList());
+                shoppingList.getNumberOfProductsList(),
+                shoppingList.getIfBoughtProductList());
         productListRecyclerViewAdapterList.add(mCurrentRecyclerViewAdapter);
         productRecyclerViewList.get(mIndex).setAdapter(productListRecyclerViewAdapterList.get(mIndex));
 
@@ -143,9 +144,9 @@ public class ProductsListFragment extends Fragment
                     ProductListRecyclerViewAdapter newAdapter = new ProductListRecyclerViewAdapter(
                             getActivity(),
                             shoppingList.getProductsList(),
-                            shoppingList.getNumberOfProductsList());
+                            shoppingList.getNumberOfProductsList(),
+                            shoppingList.getIfBoughtProductList());
 
-                    System.out.println(mShoppingLists.get(currentPagerPosition).getProductsList());
                     productListRecyclerViewAdapterList.set(currentPagerPosition, newAdapter);
                     productRecyclerViewList.get(currentPagerPosition).setAdapter(newAdapter);
 
@@ -181,6 +182,5 @@ public class ProductsListFragment extends Fragment
         super.onDestroyView();
         productListRecyclerViewAdapterList.clear();
         productRecyclerViewList.clear();
-        System.out.println("Wyszedlem");
     }
 }
