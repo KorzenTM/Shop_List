@@ -104,6 +104,7 @@ public class ShopListsFragment extends Fragment
                     shoppingList.setListName(name);
                     shoppingList.setProductList(null);
                     shoppingList.setNumberOfProductsList(null);
+                    shoppingList.setIfBoughtProductList(null);
 
                     SplashScreen.dbHandler.addShoppingList(shoppingList);
                     SplashScreen.getShoppingLists();

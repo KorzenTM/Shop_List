@@ -58,18 +58,19 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
     {
         final String currentProductName = mProductsList.get(position);
         final String currentNumberOfProduct = mNumberOfProductList.get(position);
-        holder.bind(currentProductName, currentNumberOfProduct);
+        int currentPagerPosition = ProductsListViewPagerFragment.viewPager2.getCurrentItem();
+        ShoppingList currentShoppingList = SplashScreen.mShoppingLists.get(currentPagerPosition);
+        Boolean ifBought = Boolean.parseBoolean(currentShoppingList.getIfBoughtProductList().get(position));
 
+        holder.bind(currentProductName, currentNumberOfProduct, Boolean.parseBoolean(currentShoppingList.getIfBoughtProductList().get(position)));
 
+        holder.setBackgroundDependsOfCheckbox(ifBought);
 
         holder.mIsBoughtCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b)
             {
-                int currentPagerPosition = ProductsListViewPagerFragment.viewPager2.getCurrentItem();
-                ShoppingList currentShoppingList = SplashScreen.mShoppingLists.get(currentPagerPosition);
-
                 int id = currentShoppingList.getId();
                 String NameList = currentShoppingList.getListName();
                 String Date = currentShoppingList.getDate().toString();
@@ -77,28 +78,22 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
                 String numberOfProduct = currentNumberOfProduct;
                 if (b)
                 {
-                    holder.itemView.setBackgroundColor(Color.GRAY);
-                    holder.mEditButton.setEnabled(false);
+                    holder.setBackgroundDependsOfCheckbox(true);
                     currentShoppingList.incrementNumberOfProductsBought();
+                    currentShoppingList.getIfBoughtProductList().set(position, "true");
                 }
                 else
                 {
-                    holder.itemView.setBackgroundColor(Color.WHITE);
-                    holder.mEditButton.setEnabled(true);
-                    try
-                    {
-                        currentShoppingList.decrementNumberOfProductsBought();
-                    }
-                    catch (Exception exception)
-                    {
-                        currentShoppingList.setNumberOfProductsBought(0);
-                    }
+                    holder.setBackgroundDependsOfCheckbox(false);
+                    currentShoppingList.getIfBoughtProductList().set(position, "false");
+                    currentShoppingList.decrementNumberOfProductsBought();
                 }
 
                 int numberOfProductBought = SplashScreen.mShoppingLists.get(currentPagerPosition).getNumberOfProductsBought();
                 SplashScreen.dbHandler.updateShoppingList(id, NameList, Date, mProductsList,
-                        mNumberOfProductList, numberOfProductBought);
+                        mNumberOfProductList, numberOfProductBought, currentShoppingList.getIfBoughtProductList());
                 SplashScreen.getShoppingLists();
+                notifyDataSetChanged();
             }
         });
 
@@ -149,7 +144,7 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
                     mNumberOfProductList.set(RecyclerViewPosition, numberOfProduct);
 
                     SplashScreen.dbHandler.updateShoppingList(id, NameList, Date, mProductsList,
-                            mNumberOfProductList, numberOfProductBought);
+                            mNumberOfProductList, numberOfProductBought, currentShoppingList.getIfBoughtProductList());
                     SplashScreen.getShoppingLists();
 
                     ProductListRecyclerViewAdapter newAdapter = new ProductListRecyclerViewAdapter(mContext, mProductsList, mNumberOfProductList);
@@ -200,10 +195,28 @@ public class ProductListRecyclerViewAdapter extends RecyclerView.Adapter<Product
         }
 
         @SuppressLint("SetTextI18n")
-        public void bind(String productName, String how_many)
+        public void bind(String productName, String how_many, Boolean ifBought)
         {
             mProductNameTextView.setText(productName);
             mNumberOfProductTextView.setText(how_many);
+
+            setBackgroundDependsOfCheckbox(ifBought);
+        }
+
+        public void setBackgroundDependsOfCheckbox(Boolean b)
+        {
+            if (b)
+            {
+                mIsBoughtCheckbox.setChecked(true);
+                itemView.setBackgroundColor(Color.GRAY);
+                mEditButton.setEnabled(false);
+            }
+            else
+            {
+                mIsBoughtCheckbox.setChecked(false);
+                itemView.setBackgroundColor(Color.WHITE);
+                mEditButton.setEnabled(true);
+            }
         }
 
         @Override

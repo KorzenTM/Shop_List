@@ -135,7 +135,7 @@ public class ProductsListFragment extends Fragment
                     shoppingList.addProduct(productName, numberOfProduct);
                     SplashScreen.dbHandler.updateShoppingList(id, NameList, Date,
                             shoppingList.getProductsList(), shoppingList.getNumberOfProductsList(),
-                            numberOfProductsBought);
+                            numberOfProductsBought, shoppingList.getIfBoughtProductList());
                     SplashScreen.getShoppingLists();
 
                     mShoppingLists = SplashScreen.mShoppingLists;

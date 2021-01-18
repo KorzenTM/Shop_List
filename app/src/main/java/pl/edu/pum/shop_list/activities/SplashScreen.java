@@ -107,12 +107,21 @@ public class SplashScreen extends AppCompatActivity
                     numberOfProducts = new LinkedList<>(Arrays.asList(formattedString2.split(",")));
                 }
 
+                String s3 = mCursor.getString((6));
+                List<String> ifBoughtProduct = new ArrayList<>();
+                if (!s2.equals("null"))
+                {
+                    String formattedString3 = s3.substring(1, s3.length() - 1).replace(" ", "");
+                    ifBoughtProduct = new LinkedList<>(Arrays.asList(formattedString3.split(",")));
+                }
+
                 shoppingList.setId(id);
                 shoppingList.setListName(list_name);
                 shoppingList.setDate(new Date(date));
                 shoppingList.setProductList(productsList);
                 shoppingList.setNumberOfProductsList(numberOfProducts);
                 shoppingList.setNumberOfProductsBought(productBought);
+                shoppingList.setIfBoughtProductList(ifBoughtProduct);
                 mShoppingLists.add(shoppingList);
             }
         }

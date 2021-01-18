@@ -109,7 +109,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
                     String name = mEditNameEditText.getText().toString();
                     SplashScreen.dbHandler.updateShoppingList(currentShoppingList.getId(),
                             name, currentShoppingList.getDate().toString(), null,
-                            null, 0);
+                            null, 0, null);
                     SplashScreen.getShoppingLists();
                     notifyDataSetChanged();
                     Toast.makeText(mContext, "Name has been updated", Toast.LENGTH_SHORT).show();

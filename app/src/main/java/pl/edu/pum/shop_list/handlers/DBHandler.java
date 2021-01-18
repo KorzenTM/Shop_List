@@ -22,6 +22,7 @@ public class DBHandler extends SQLiteOpenHelper
     public static final String COLUMN_PRODUCTS = "products";
     public static final String COLUMN_NUMBER_OF_PRODUCTS = "number_of_products";
     public static final String COLUMN_NUMBER_OF_PRODUCTS_BOUGHT = "number_of_products_bought";
+    public static final String COLUMN_IF_BOUGHT = "if_bought";
 
     public DBHandler(Context context)
     {
@@ -45,6 +46,8 @@ public class DBHandler extends SQLiteOpenHelper
                 COLUMN_NUMBER_OF_PRODUCTS +
                 " TEXT," +
                 COLUMN_NUMBER_OF_PRODUCTS_BOUGHT +
+                " TEXT," +
+                COLUMN_IF_BOUGHT +
                 " TEXT" +
                 ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_LISTS_TABLE);
@@ -72,6 +75,7 @@ public class DBHandler extends SQLiteOpenHelper
         values.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
         values.put(COLUMN_NUMBER_OF_PRODUCTS, String.valueOf(shoppingList.getNumberOfProductsList()));
         values.put(COLUMN_NUMBER_OF_PRODUCTS_BOUGHT, shoppingList.getNumberOfProductsBought());
+        values.put(COLUMN_IF_BOUGHT, String.valueOf(shoppingList.getIfBoughtProductList()));
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -102,7 +106,8 @@ public class DBHandler extends SQLiteOpenHelper
         db.close();
     }
 
-    public void updateShoppingList(int id, String listName, String date, List<String> Products, List<String> NumberOfProducts, int numberOfProductsBought)
+    public void updateShoppingList(int id, String listName, String date, List<String> Products,
+                                   List<String> NumberOfProducts, int numberOfProductsBought, List<String> ifBought)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -112,6 +117,7 @@ public class DBHandler extends SQLiteOpenHelper
         contentValues.put(COLUMN_PRODUCTS, String.valueOf(Products));
         contentValues.put(COLUMN_NUMBER_OF_PRODUCTS, String.valueOf(NumberOfProducts));
         contentValues.put(COLUMN_NUMBER_OF_PRODUCTS_BOUGHT, numberOfProductsBought);
+        contentValues.put(COLUMN_IF_BOUGHT, String.valueOf(ifBought));
 
         db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + id, null);
         db.close();

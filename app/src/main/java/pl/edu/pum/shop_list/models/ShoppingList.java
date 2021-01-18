@@ -11,6 +11,7 @@ public class ShoppingList
     private Date mDate;
     private List<String> mProducts = new ArrayList<>();
     private List<String> mNumberOfProducts = new ArrayList<>();
+    private List<String> mIfBoughtProduct = new ArrayList<>();
     private int mNumberOfProductsBought = 0;
 
     public ShoppingList() { }
@@ -54,6 +55,7 @@ public class ShoppingList
     {
         mProducts.add(ingredient);
         mNumberOfProducts.add(how_many);
+        mIfBoughtProduct.add("false");
     }
 
     public List<String> getProductsList()
@@ -93,5 +95,13 @@ public class ShoppingList
         this.mNumberOfProductsBought = numberOfProductsBought;
     }
 
+    public List<String> getIfBoughtProductList()
+    {
+        return mIfBoughtProduct;
+    }
 
+    public void setIfBoughtProductList(List<String> mIfBoughtProduct)
+    {
+        this.mIfBoughtProduct = mIfBoughtProduct;
+    }
 }
