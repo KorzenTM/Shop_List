@@ -33,7 +33,6 @@ public class ShopListsFragment extends Fragment
     private RecyclerView mShoppingListsRecyclerView;
     private ShoppingListRecyclerViewAdapter mShoppingListRecyclerViewAdapter;
     private FloatingActionButton mAddListFAB;
-    public  TextView mInformationAboutAddTextView;
     private List<ShoppingList> mShoppingLists;
 
     @Override
@@ -49,17 +48,7 @@ public class ShopListsFragment extends Fragment
 
         mAddListFAB = v.findViewById(R.id.fab);
         mShoppingListsRecyclerView = v.findViewById(R.id.recycler_view);
-        mInformationAboutAddTextView = v.findViewById(R.id.information_about_add_text_view);
         mShoppingLists = SplashScreen.mShoppingLists;
-
-        if (mShoppingLists.isEmpty())
-        {
-            mInformationAboutAddTextView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mInformationAboutAddTextView.setVisibility(View.INVISIBLE);
-        }
 
         mShoppingListsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mShoppingListRecyclerViewAdapter = new ShoppingListRecyclerViewAdapter(getActivity(), mShoppingLists);
@@ -113,7 +102,6 @@ public class ShopListsFragment extends Fragment
                     mShoppingListsRecyclerView.scrollToPosition(mShoppingLists.size() - 1);
 
                     Toast.makeText(getActivity(), "The list " + name + " has been added", Toast.LENGTH_SHORT).show();
-                    mInformationAboutAddTextView.setVisibility(View.INVISIBLE);
                 }
             }
         });

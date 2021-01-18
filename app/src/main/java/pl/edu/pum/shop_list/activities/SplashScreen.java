@@ -76,7 +76,6 @@ public class SplashScreen extends AppCompatActivity
 
         if (mCursor.getCount() == 0)
         {
-            //ShopListsFragment.mInformationAboutAddTextView.setVisibility(View.VISIBLE);
             Log.d("DATABASE_STATUS", "EMPTY DATABASE");
         }
         else
