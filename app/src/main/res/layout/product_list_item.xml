@@ -43,6 +43,16 @@
 
     </TextView>
 
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:layout_below="@id/product_name_text_view"
+        android:layout_centerHorizontal="true">
+
+    </Button>
+
     <CheckBox
         android:id="@+id/bought_checkbox"
         android:layout_width="wrap_content"

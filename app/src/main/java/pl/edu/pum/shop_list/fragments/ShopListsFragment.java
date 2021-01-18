@@ -33,7 +33,7 @@ public class ShopListsFragment extends Fragment
     private RecyclerView mShoppingListsRecyclerView;
     private ShoppingListRecyclerViewAdapter mShoppingListRecyclerViewAdapter;
     private FloatingActionButton mAddListFAB;
-    public static TextView mInformationAboutAddTextView;
+    public  TextView mInformationAboutAddTextView;
     private List<ShoppingList> mShoppingLists;
 
     @Override
@@ -79,7 +79,7 @@ public class ShopListsFragment extends Fragment
 
     private void showAddDialog()
     {
-        final View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.list_dialog, null);
+        final View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.edit_list_dialog, null);
         EditText mEditNameEditText = view.findViewById(R.id.list_name_edit_text);
         mEditNameEditText.setHint("Name of new list");
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -102,15 +102,15 @@ public class ShopListsFragment extends Fragment
                     shoppingList.setId(mShoppingLists.size());
                     shoppingList.setDate(new Date());
                     shoppingList.setListName(name);
-                    List<String> test = new ArrayList<>();
-                    test.add("Jajko");
-                    test.add("Ziemniaki");
-                    test.add("Ser");
-                    shoppingList.setProductList(test);
+                    shoppingList.setProductList(null);
+                    shoppingList.setNumberOfProductsList(null);
+
                     SplashScreen.dbHandler.addShoppingList(shoppingList);
                     SplashScreen.getShoppingLists();
+
                     mShoppingListRecyclerViewAdapter.notifyItemInserted(mShoppingLists.size() - 1);
                     mShoppingListsRecyclerView.scrollToPosition(mShoppingLists.size() - 1);
+
                     Toast.makeText(getActivity(), "The list " + name + " has been added", Toast.LENGTH_SHORT).show();
                     mInformationAboutAddTextView.setVisibility(View.INVISIBLE);
                 }
@@ -135,12 +135,5 @@ public class ShopListsFragment extends Fragment
     {
         mShoppingListRecyclerViewAdapter.notifyDataSetChanged();
         super.onResume();
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        SplashScreen.dbHandler.close();
-        super.onDestroyView();
     }
 }

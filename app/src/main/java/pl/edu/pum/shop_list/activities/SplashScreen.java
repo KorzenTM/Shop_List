@@ -11,7 +11,9 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import pl.edu.pum.shop_list.R;
@@ -50,9 +52,6 @@ public class SplashScreen extends AppCompatActivity
                     dbHandler = new DBHandler(getBaseContext());
                     mCursor = dbHandler.getShoppingLists();
 
-                    //if (mCursor.getCount() == 0)
-                        //test_data(10);
-
                     getShoppingLists();
                     progressBar.setVisibility(View.VISIBLE);
                     Thread.sleep(1000);
@@ -77,7 +76,7 @@ public class SplashScreen extends AppCompatActivity
 
         if (mCursor.getCount() == 0)
         {
-            ShopListsFragment.mInformationAboutAddTextView.setVisibility(View.VISIBLE);
+            //ShopListsFragment.mInformationAboutAddTextView.setVisibility(View.VISIBLE);
             Log.d("DATABASE_STATUS", "EMPTY DATABASE");
         }
         else
@@ -86,30 +85,36 @@ public class SplashScreen extends AppCompatActivity
             while (mCursor.moveToNext())
             {
                 ShoppingList shoppingList = new ShoppingList();
+
                 int id = mCursor.getInt(0);
                 String list_name = mCursor.getString(1);
                 String date = mCursor.getString(2);
+                int productBought = mCursor.getInt(5);
+
                 String s = mCursor.getString(3);
-                String formattedString = s.substring(1, s.length() - 1).replace(" ", "");
-                List<String> productsList = new ArrayList<String>(Arrays.asList(formattedString.split(",")));
+                List<String> productsList = new ArrayList<>();
+                if (!s.equals("null"))
+                {
+                    String formattedString = s.substring(1, s.length() - 1).replace(" ", "");
+                    productsList = new LinkedList<>(Arrays.asList(formattedString.split(",")));
+                }
+
+                String s2 = mCursor.getString((4));
+                List<String> numberOfProducts = new ArrayList<>();
+                if (!s2.equals("null"))
+                {
+                    String formattedString2 = s2.substring(1, s2.length() - 1).replace(" ", "");
+                    numberOfProducts = new LinkedList<>(Arrays.asList(formattedString2.split(",")));
+                }
+
                 shoppingList.setId(id);
                 shoppingList.setListName(list_name);
                 shoppingList.setDate(new Date(date));
                 shoppingList.setProductList(productsList);
+                shoppingList.setNumberOfProductsList(numberOfProducts);
+                shoppingList.setNumberOfProductsBought(productBought);
                 mShoppingLists.add(shoppingList);
             }
-        }
-    }
-
-    public void test_data(int how_many)
-    {
-        for(int i = 0; i <= how_many; i++)
-        {
-            ShoppingList shoppingList = new ShoppingList();
-            shoppingList.setId(i);
-            shoppingList.setListName("List " + i);
-            shoppingList.setDate(new Date());
-            dbHandler.addShoppingList(shoppingList);
         }
     }
 }

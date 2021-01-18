@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 import pl.edu.pum.shop_list.models.ShoppingList;
 
 public class DBHandler extends SQLiteOpenHelper
@@ -18,6 +20,8 @@ public class DBHandler extends SQLiteOpenHelper
     public static final String COLUMN_LIST_NAME = "listName";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_PRODUCTS = "products";
+    public static final String COLUMN_NUMBER_OF_PRODUCTS = "number_of_products";
+    public static final String COLUMN_NUMBER_OF_PRODUCTS_BOUGHT = "number_of_products_bought";
 
     public DBHandler(Context context)
     {
@@ -37,6 +41,10 @@ public class DBHandler extends SQLiteOpenHelper
                 COLUMN_DATE +
                 " TEXT," +
                 COLUMN_PRODUCTS +
+                " TEXT," +
+                COLUMN_NUMBER_OF_PRODUCTS +
+                " TEXT," +
+                COLUMN_NUMBER_OF_PRODUCTS_BOUGHT +
                 " TEXT" +
                 ")";
         sqLiteDatabase.execSQL(CREATE_SHOPPING_LISTS_TABLE);
@@ -62,6 +70,8 @@ public class DBHandler extends SQLiteOpenHelper
         values.put(COLUMN_LIST_NAME, shoppingList.getListName());
         values.put(COLUMN_DATE, shoppingList.getDate().toString());
         values.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
+        values.put(COLUMN_NUMBER_OF_PRODUCTS, String.valueOf(shoppingList.getNumberOfProductsList()));
+        values.put(COLUMN_NUMBER_OF_PRODUCTS_BOUGHT, shoppingList.getNumberOfProductsBought());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -92,26 +102,19 @@ public class DBHandler extends SQLiteOpenHelper
         db.close();
     }
 
-    public void updateShoppingList(int id, String listName, String date)
+    public void updateShoppingList(int id, String listName, String date, List<String> Products, List<String> NumberOfProducts, int numberOfProductsBought)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ID, id);
         contentValues.put(COLUMN_LIST_NAME, listName);
         contentValues.put(COLUMN_DATE, date);
+        contentValues.put(COLUMN_PRODUCTS, String.valueOf(Products));
+        contentValues.put(COLUMN_NUMBER_OF_PRODUCTS, String.valueOf(NumberOfProducts));
+        contentValues.put(COLUMN_NUMBER_OF_PRODUCTS_BOUGHT, numberOfProductsBought);
 
         db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + id, null);
         db.close();
     }
 
-    public void updateProducts(ShoppingList shoppingList)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, shoppingList.getId());
-        contentValues.put(COLUMN_PRODUCTS, String.valueOf(shoppingList.getProductsList()));
-
-        db.update(TABLE_SHOPPING_LIST, contentValues, COLUMN_ID + "=" + shoppingList.getId(), null);
-        db.close();
-    }
 }

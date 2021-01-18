@@ -88,7 +88,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
     private void showEditDialog(ShoppingList currentShoppingList)
     {
-        final View view = mContext.getLayoutInflater().inflate(R.layout.list_dialog, null);
+        final View view = mContext.getLayoutInflater().inflate(R.layout.edit_list_dialog, null);
         EditText mEditNameEditText = view.findViewById(R.id.list_name_edit_text);
         mEditNameEditText.setText(currentShoppingList.getListName());
         AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
@@ -108,7 +108,8 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
                 {
                     String name = mEditNameEditText.getText().toString();
                     SplashScreen.dbHandler.updateShoppingList(currentShoppingList.getId(),
-                            name, currentShoppingList.getDate().toString());
+                            name, currentShoppingList.getDate().toString(), null,
+                            null, 0);
                     SplashScreen.getShoppingLists();
                     notifyDataSetChanged();
                     Toast.makeText(mContext, "Name has been updated", Toast.LENGTH_SHORT).show();
@@ -147,7 +148,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
             super(itemView);
 
             mListNameTextView = itemView.findViewById(R.id.list_name_text_view);
-            mNumberOfIngredientsTextView = itemView.findViewById(R.id.number_of_ingredients_text_view);
+            mNumberOfIngredientsTextView = itemView.findViewById(R.id.how_many_bought_text_view);
             mCreatedDateTextView = itemView.findViewById(R.id.time_of_creation_text_view);
             mOptionsButton = itemView.findViewById(R.id.options_text_view);
 
@@ -158,14 +159,16 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         {
             mListNameTextView.setText(currentShoppingList.getListName());
             mCreatedDateTextView.setText(currentShoppingList.getDate().toString());
-            //TODO add number of ingredients after implementation
-            mNumberOfIngredientsTextView.setText("15/20");
+            String numbers = String.valueOf(currentShoppingList.getNumberOfProductsBought()
+                    + "/" +
+                    currentShoppingList.getNumberOfProductsList().size());
+            mNumberOfIngredientsTextView.setText(numbers);
         }
 
         @Override
         public void onClick(View view)
         {
-           Intent intent = new Intent(mContext, ProductsListViewPagerActivity.class);
+            Intent intent = new Intent(mContext, ProductsListViewPagerActivity.class);
             ProductsListFragment.CurrentPosition = getAbsoluteAdapterPosition();
             mContext.startActivity(intent);
         }

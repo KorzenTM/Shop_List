@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import pl.edu.pum.shop_list.R;
+import pl.edu.pum.shop_list.activities.ProductsListViewPagerActivity;
 import pl.edu.pum.shop_list.activities.SplashScreen;
 import pl.edu.pum.shop_list.adapters.ProductListRecyclerViewAdapter;
-import pl.edu.pum.shop_list.adapters.ShoppingListRecyclerViewAdapter;
 import pl.edu.pum.shop_list.models.ShoppingList;
 
 public class ProductsListFragment extends Fragment
@@ -38,8 +38,11 @@ public class ProductsListFragment extends Fragment
     public static int CurrentPosition = 0;
     private ShoppingList shoppingList;
     private List<ShoppingList> mShoppingLists;
-    private RecyclerView mProductListsRecyclerView;
-    private ProductListRecyclerViewAdapter mProductListRecyclerViewAdapter;
+    public RecyclerView mCurrentProductListsRecyclerView;
+    public ProductListRecyclerViewAdapter mCurrentRecyclerViewAdapter;
+    public static List<ProductListRecyclerViewAdapter> productListRecyclerViewAdapterList = new ArrayList<>();
+    public static  List<RecyclerView> productRecyclerViewList = new ArrayList<>();
+
 
     public ProductsListFragment()
     {
@@ -60,8 +63,10 @@ public class ProductsListFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
+        {
             mIndex = getArguments().getInt("KEY");
-        shoppingList = new ShoppingList();
+        }
+
     }
 
     @Override
@@ -75,11 +80,16 @@ public class ProductsListFragment extends Fragment
 
         mNameListTextView = v.findViewById(R.id.name_list_text_view);
         mAddProductFab = v.findViewById(R.id.add_new_product_fab);
-        mProductListsRecyclerView = v.findViewById(R.id.products_recycler_view);
+        mCurrentProductListsRecyclerView = v.findViewById(R.id.products_recycler_view);
 
-        mProductListsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mProductListRecyclerViewAdapter = new ProductListRecyclerViewAdapter(getActivity(), mShoppingLists, shoppingList.getProductsList());
-        mProductListsRecyclerView.setAdapter(mProductListRecyclerViewAdapter);
+        mCurrentProductListsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        productRecyclerViewList.add(mCurrentProductListsRecyclerView);
+
+        mCurrentRecyclerViewAdapter = new ProductListRecyclerViewAdapter(getActivity(),
+                shoppingList.getProductsList(),
+                shoppingList.getNumberOfProductsList());
+        productListRecyclerViewAdapterList.add(mCurrentRecyclerViewAdapter);
+        productRecyclerViewList.get(mIndex).setAdapter(productListRecyclerViewAdapterList.get(mIndex));
 
         mAddProductFab.setOnClickListener(new View.OnClickListener()
         {
@@ -90,14 +100,14 @@ public class ProductsListFragment extends Fragment
             }
         });
 
-
         return v;
     }
 
     private void showAddDialog()
     {
-        final View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.list_dialog, null);
-        EditText newProductName = view.findViewById(R.id.list_name_edit_text);
+        final View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.edit_product_dialog, null);
+        EditText newProductName = view.findViewById(R.id.product_name_edit_text);
+        EditText newNumberOfProduct = view.findViewById(R.id.number_of_product_edit_text);
         newProductName.setHint("Name of new product");
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("Add new product");
@@ -108,19 +118,39 @@ public class ProductsListFragment extends Fragment
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
-                if (newProductName.getText().toString().isEmpty())
+                if (newProductName.getText().toString().isEmpty() && newNumberOfProduct.getText().toString().isEmpty())
                 {
                     Toast.makeText(getActivity(), "The field must not be empty", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    String name = newProductName.getText().toString();
-                    shoppingList.addProduct(name);
-                    SplashScreen.dbHandler.updateProducts(shoppingList);
+                    int currentPagerPosition = ProductsListViewPagerFragment.viewPager2.getCurrentItem();
+                    int id = shoppingList.getId();
+                    String NameList = shoppingList.getListName();
+                    String Date = shoppingList.getDate().toString();
+                    String productName = newProductName.getText().toString();
+                    String numberOfProduct = newNumberOfProduct.getText().toString();
+                    int numberOfProductsBought = shoppingList.getNumberOfProductsBought();
+
+                    shoppingList.addProduct(productName, numberOfProduct);
+                    SplashScreen.dbHandler.updateShoppingList(id, NameList, Date,
+                            shoppingList.getProductsList(), shoppingList.getNumberOfProductsList(),
+                            numberOfProductsBought);
                     SplashScreen.getShoppingLists();
-                    mProductListRecyclerViewAdapter.notifyItemInserted(shoppingList.getProductsList().size() - 1);
-                    mProductListsRecyclerView.scrollToPosition(shoppingList.getProductsList().size() - 1);
-                    Toast.makeText(getActivity(), "The product " + name + " has been added", Toast.LENGTH_SHORT).show();
+
+                    mShoppingLists = SplashScreen.mShoppingLists;
+
+                    ProductListRecyclerViewAdapter newAdapter = new ProductListRecyclerViewAdapter(
+                            getActivity(),
+                            shoppingList.getProductsList(),
+                            shoppingList.getNumberOfProductsList());
+
+                    System.out.println(mShoppingLists.get(currentPagerPosition).getProductsList());
+                    productListRecyclerViewAdapterList.set(currentPagerPosition, newAdapter);
+                    productRecyclerViewList.get(currentPagerPosition).setAdapter(newAdapter);
+
+
+                    Toast.makeText(getActivity(), "The product " + productName + " has been added", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -146,9 +176,11 @@ public class ProductsListFragment extends Fragment
     }
 
     @Override
-    public void onResume()
+    public void onDestroyView()
     {
-        mProductListRecyclerViewAdapter.notifyDataSetChanged();
-        super.onResume();
+        super.onDestroyView();
+        productListRecyclerViewAdapterList.clear();
+        productRecyclerViewList.clear();
+        System.out.println("Wyszedlem");
     }
 }
